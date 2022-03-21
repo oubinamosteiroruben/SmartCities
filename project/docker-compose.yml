@@ -1,48 +1,43 @@
-version: '3.7'
+version: '3.8'
 services:
-  data-generator:
-    build: ./data-generator
-    container_name: data-generator
-    depends_on:
-      redpanda: { condition: service_healthy }
-  redpanda:
-    image: docker.vectorized.io/vectorized/redpanda:v21.11.3
-    container_name: redpanda
-    command:
-     - redpanda start
-     - --overprovisioned
-     - --smp 1
-     - --memory 1G
-     - --reserve-memory 0M
-     - --node-id 0
-     - --check=false
-     - --kafka-addr 0.0.0.0:9092
-     - --advertise-kafka-addr redpanda:9092
-     - --pandaproxy-addr 0.0.0.0:8082
-     - --advertise-pandaproxy-addr redpanda:8082
-     - --set redpanda.enable_transactions=true
-     - --set redpanda.enable_idempotence=true
-     - --set redpanda.auto_create_topics_enabled=true
+  zkpr:
+    image: confluentinc/cp-zookeeper:5.5.3
+    container_name: zkpr
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    healthcheck: { test: nc -z localhost 2181, interval: 1s, start_period: 120s }
+  
+  kafka:
+    container_name: kafka
+    image: confluentinc/cp-enterprise-kafka:5.5.3
+    depends_on: [zkpr]
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zkpr:2181
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,OUTSIDE://0.0.0.0:9094
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,OUTSIDE://localhost:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     ports:
-     - 9092:9092
-     - 8081:8081
-     - 8082:8082
-    healthcheck: { test: curl -f localhost:9644/v1/status/ready, interval: 1s, start_period: 30s }
-  materialized:
-    image: materialize/materialized:v0.21.0
-    container_name: materialized
-    command: -w1
+    - 9092:9092
+    - 9094:9094
+    healthcheck: { test: nc -z localhost 9092, interval: 1s, start_period: 120s }
+
+  memsql:
+    container_name: singlestore
+    image: 'singlestore/cluster-in-a-box'
     ports:
-      - 6875:6875
-    volumes:
-      - ./data/icao24_mapping_airbus.json.gz:/tmp/icao24_mapping_airbus.json.gz
-  mzcli:
-    image: materialize/cli
-    container_name: mzcli
+      - 3306:3306
+      - 8080:8080
+    environment:
+      LICENSE_KEY: ${LICENSE_KEY}
+      ROOT_PASSWORD: 'password'
+      START_AFTER_INIT: 'Y'
+
   dbt:
     build:
       context: ./dbt
-      target: dbt-third-party
+      target: dbt-singlestore
       args:
         - build_for=${ARCH}
     container_name: dbt
@@ -54,11 +49,12 @@ services:
     stdin_open: true
     tty: true
     depends_on:
-      - materialized
+      - memsql
+
   metabase:
     image: ${MIMG}/metabase
     container_name: metabase
     depends_on:
-       - materialized
+       - memsql
     ports:
       - 3030:3000
