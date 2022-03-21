@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: fct_bus
+    description: ""
+    columns:
+      - name: tiempo1
+        description: ""
+      - name: destino1
+        descripcion: ""
+

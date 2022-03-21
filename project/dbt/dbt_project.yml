@@ -1,0 +1,22 @@
+# Project name
+name: 'mz_smart_cities'
+version: '1.0.0'
+config-version: 2
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'materialize_smart_cities'
+
+model-paths: ["models"]
+
+target-path: "target"  # directory which will store compiled SQL files
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_modules"
+
+models:
+
+  examples:
+    +enabled: true
+    
+  templates:
+    +enabled: false    
