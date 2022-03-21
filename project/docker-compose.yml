@@ -23,21 +23,23 @@ services:
     - 9094:9094
     healthcheck: { test: nc -z localhost 9092, interval: 1s, start_period: 120s }
 
-  memsql:
-    container_name: singlestore
-    image: 'singlestore/cluster-in-a-box'
+  materialized:
+    image: materialize/materialized:v0.20.0
+    container_name: materialized
+    command: -w1
     ports:
-      - 3306:3306
-      - 8080:8080
-    environment:
-      LICENSE_KEY: ${LICENSE_KEY}
-      ROOT_PASSWORD: 'password'
-      START_AFTER_INIT: 'Y'
+      - 6875:6875
+
+  mzcli:
+    image: materialize/cli
+    container_name: mzcli
+    depends_on:
+      - materialized
 
   dbt:
     build:
       context: ./dbt
-      target: dbt-singlestore
+      target: dbt-third-party
       args:
         - build_for=${ARCH}
     container_name: dbt
@@ -49,7 +51,7 @@ services:
     stdin_open: true
     tty: true
     depends_on:
-      - memsql
+      - materialized
 
   metabase:
     image: ${MIMG}/metabase
