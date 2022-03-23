@@ -5,7 +5,7 @@
 {% endset %}
 
 CREATE SOURCE {{ source_name }}
-FROM KAFKA BROKER 'redpanda:9092' TOPIC 'bus_information'
+FROM KAFKA BROKER 'kafka:9092' TOPIC 'bus_information'
   KEY FORMAT BYTES
   VALUE FORMAT BYTES
 ENVELOPE UPSERT;

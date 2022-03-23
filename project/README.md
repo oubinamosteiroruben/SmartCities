@@ -173,7 +173,7 @@ SHOW VIEWS;
  stg_bus_information
 ```
 
-You'll notice that you're only able to `SELECT` from `fct_flight` — this is because it is the only [**materialized** view](https://materialize.com/docs/overview/api-components/#materialized-views)! This view is incrementally updated as new data streams in, so you get fresh and correct results with low latency. Behind the scenes, Materialize is indexing the results of the embedded query in memory.
+You'll notice that you're only able to `SELECT` from `fct_bus` — this is because it is the only [**materialized** view](https://materialize.com/docs/overview/api-components/#materialized-views)! This view is incrementally updated as new data streams in, so you get fresh and correct results with low latency. Behind the scenes, Materialize is indexing the results of the embedded query in memory.
 
 ## Metabase
 
