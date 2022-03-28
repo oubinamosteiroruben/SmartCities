@@ -4,10 +4,6 @@ This is a sample project with enough plumbing to spin up an end-to-end analytics
 
 ## Setup
 
-<p align="center">
-<img width="650" alt="demo_overview" src="https://user-images.githubusercontent.com/23521087/151333471-98ad518d-5ac5-444e-b065-83e3aaa42748.png">
-</p>
-
 The project uses [Docker Compose](https://docs.docker.com/get-started/08_using_compose/) to make it easier to bundle up all the services in the pipeline:
 
 * **Data generator**
@@ -16,7 +12,7 @@ The project uses [Docker Compose](https://docs.docker.com/get-started/08_using_c
 
 * **Redpanda**
 
-  The data generator produces JSON-formatted events with flight information into the `flight_information` Redpanda topic. You can think of Redpanda as your source of truth, the system that stores and distributes your business-critical data downstream.
+  The data generator produces JSON-formatted events with bus information into the `bus_information` Redpanda topic. You can think of Redpanda as your source of truth, the system that stores and distributes your business-critical data downstream.
 
 * **Materialize**
 
