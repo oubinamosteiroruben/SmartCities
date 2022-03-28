@@ -5,7 +5,6 @@ import sys
 import os
 import urllib.request
 import json
-import requests
 import schedule
 import logging
 from kafka import KafkaProducer
