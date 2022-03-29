@@ -12,13 +12,13 @@ The project uses [Docker Compose](https://docs.docker.com/get-started/08_using_c
 
   Finding streaming data to play with isn't always a breeze, so we wired up a data generator that polls the [Santander Data Network](http://datos.santander.es/dataset/?id=control-flota-autobuses) continuously to save you some time! For details like poll frequency and message schema, or just a template to create a message producer for a different source of data, check the [`data-generator` directory](./data-generator/README.md).
 
-* **Redpanda**
+* **Kafka**
 
-  The data generator produces JSON-formatted events with flight information into the `flight_information` Redpanda topic. You can think of Redpanda as your source of truth, the system that stores and distributes your business-critical data downstream.
+  The data generator produces JSON-formatted events with flight information into the `flight_information` Kafka topic. You can think of Kafka as your source of truth, the system that stores and distributes your business-critical data downstream.
 
 * **Materialize**
 
-  Materialize is set up to consume streaming flight information from Redpanda, as well as static aircraft reference data from a JSON file. Any sources and transformations are defined through dbt! We've also included `mzcli` (a `psql`-like SQL client) in the setup, so you can easily connect to the running Materialize instance.
+  Materialize is set up to consume streaming flight information from Kafka, as well as static aircraft reference data from a JSON file. Any sources and transformations are defined through dbt! We've also included `mzcli` (a `psql`-like SQL client) in the setup, so you can easily connect to the running Materialize instance.
 
 * **dbt**
 

@@ -4,4 +4,4 @@ version: 2
 
 models:
   - name: rp_bus_information
-    description: This model creates a source based on the bus_information topic in Redpanda
+    description: This model creates a source based on the bus_information topic in Kafka
