@@ -19,7 +19,7 @@ def json_serializer(obj):
 def get_bus():
 
     # Producer instance
-    prod = KafkaProducer(bootstrap_servers='localhost:9094')
+    prod = KafkaProducer(bootstrap_servers='kafka:9092')
 
     try:
         #r = requests.get('http://datos.santander.es/api/rest/datasets/control_flotas_estimaciones.json').json()

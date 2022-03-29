@@ -1,6 +1,6 @@
-# OpenSky Data Generator
+# Bus Data Generator
 
-The `busGenerator.py` data generator pulls live flight information data from the Satander data web (http://datos.santander.es/api/rest/datasets/control_flotas_estimaciones.json) [^1] **every 30 seconds**, and uses the [Kafka Python client](https://kafka-python.readthedocs.io/en/master/) (`kafka-python`) to push events into Redpanda.
+The `busGenerator.py` data generator pulls live flight information data from the Satander data web (http://datos.santander.es/api/rest/datasets/control_flotas_estimaciones.json) [^1] **every 30 seconds**, and uses the [Kafka Python client](https://kafka-python.readthedocs.io/en/master/) (`kafka-python`) to push events into Kafka.
 
 **Example:**
 
@@ -32,3 +32,4 @@ docker-compose build --no-cache
 
 docker-compose up --force-recreate -d
 ```
+

@@ -1,12 +1,10 @@
-# Taking off with Materialize, Redpanda and dbt
+# Taking off with Materialize, Kafka and dbt
 
-This is a sample project with enough plumbing to spin up an end-to-end analytics pipeline using Materialize, Redpanda and dbt to explore real-time data.
+This is a sample project with enough plumbing to spin up an end-to-end analytics pipeline using Materialize, Kafka and dbt to explore real-time data.
 
 ## Setup
 
-<p align="center">
-<img width="650" alt="demo_overview" src="https://user-images.githubusercontent.com/23521087/151333471-98ad518d-5ac5-444e-b065-83e3aaa42748.png">
-</p>
+
 
 The project uses [Docker Compose](https://docs.docker.com/get-started/08_using_compose/) to make it easier to bundle up all the services in the pipeline:
 
@@ -58,7 +56,11 @@ docker-compose up -d
 # Check if everything is up and running!
 docker-compose ps
 ```
+To run the data-generator is necesary to use:
 
+```bash
+docker-compose run data-generator
+```
 At any point, you can stop the data generator using:
 
 ```bash
@@ -71,20 +73,15 @@ Once you're done playing with the setup, tear it down:
 docker-compose down -v
 ```
 
-## Redpanda
+## Kafka
 
 ### Check the source data
 
-To tap into and manage Redpanda, you can use the [rpk](https://docs.redpanda.com/docs/reference/rpk-commands/) CLI. For example, to check that the topic has been created, run:
+To check the topic list:
 
 ```bash
-docker-compose exec redpanda rpk topic list
-```
-
-and that there's data landing from the `data-generator`:
-
-```bash
-docker-compose exec redpanda rpk topic consume flight_information
+docker exec -it kafka /bin/bash
+kafka-topics --zookeeper zkpr:2181 --list
 ```
 
 To exit the consumer, press **Ctrl+C**.
